@@ -65,6 +65,31 @@ def pattern_search(seq, pattern):
         else:
             i += 1 ## pokračování na další pozici při neshodě
     return pozice
+    # UKOL 2.6 : NEJLEPSI O(m)     NEJHORSI O(m*n)
+
+def binary_search(seznam, searching_num):
+    '''
+    zda-li se ve vzestupně seřazené posloupnosti nachází libovolné požadované číslo a vrátí jeho pozici
+    :param seznam: prohledávaný seznam čísel (list)
+    :param searching_num: hledané číslo (int)
+    :return: index, na kterém se hledané číslo v sekvenci nachází. Pokud není číslo nalezeno, funkce vrátí hodnotu None.
+    '''
+    left = 0
+    right = len(seznam)-1 #indexace od nuly
+
+    while left <= right:
+        middle = (left + right) // 2  # Středový index
+
+        if seznam[middle] == searching_num:
+            return middle  # Pokud najdeme hledané číslo, vrátíme jeho index
+        elif seznam[middle] < searching_num:
+            left = middle + 1  # Pokud hledané číslo je větší, posuneme levý index
+        else:
+            right = middle - 1  # Pokud hledané číslo je menší, posuneme pravý index
+    return None
+
+    # UKOL 2.8 : sekvenční:NEJLEPSI O(1)   NEJHORSI O(n) (az na poslednim miste n prvku) , binární (prvek je neni v seznamu): NEJLEPSI O(1)     NEJHORSI O(log n)
+    # Celkový počet porovnání je tedy počet iterací, které jsou potřebné k tomu, aby se oblast zúžila na 1 prvek. Pokud je délka seznamu n, pak počet porovnání v nejhorším případě je přibližně logaritmus z n (kde logaritmus je o základu 2, protože každé porovnání zkracuje oblast na polovinu).
 
 def main():
     file_name = 'sequential.json' #pass
@@ -76,14 +101,20 @@ def main():
     vysledek = linear_search(sekvence, hledane_cislo)
     print(f"Hledané č.:{hledane_cislo} má tyto pozice: {vysledek['positions']} a nachází se v dané sekvenci čísel {vysledek['count']}krát.")
 
-    # Načtení DNA sekvence ze souboru
+    #Načtení DNA sekvence ze souboru
     dna_data = read_data(file_name, field='dna_sequence')
     print("DNA sekvence:", dna_data)
 
     hledany_vzor = "ATA"
     nalezene_pozice = pattern_search(dna_data, hledany_vzor)
-
     print(f"Vzor '{hledany_vzor}' nalezen na pozicích: {nalezene_pozice}")
+
+    #Nacteni serazeneho seznamu cisel
+    serazeny_seznam = read_data(file_name, field='ordered_numbers')
+    print(serazeny_seznam)
+    hledane_num = -3
+    index_pozice = binary_search(serazeny_seznam, hledane_num)
+    print(f"Hledané číslo {hledane_num} se nachází na {index_pozice}. pozici dané seřazené sekvence {serazeny_seznam}")
 
 if __name__ == '__main__':
     main()
